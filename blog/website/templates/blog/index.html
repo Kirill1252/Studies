@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block title %}
+<title>{{ title }}</title>
+{% endblock %}
+{% block content %}
+<!-- Page Content -->
+
+
+<!-- Blog Entries Column -->
+<div class="col-md-8">
+
+    <h1 class="page-header">
+        Page Heading
+        <small>Secondary Text</small>
+    </h1>
+
+    <!-- First Blog Post -->
+    {% for post in posts %}
+    <h2>
+        <a href="{% url 'blog:post' post.id %}">{{ post.title }}</a>
+    </h2>
+    <hr>
+    <img src="{{ post.avatar|thumbnail_url:'avatar' }}" alt="{{ post.avatar.name }}">
+    <hr>
+    <p><span class="glyphicon glyphicon-time"></span>{{ post.created }}</p>
+    <hr>
+    <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+    <hr>
+    <p>{{ post.content }}</p>
+    {% if request.user.is_authenticated %}
+        {% if request.user.get_group_permissions %}
+
+            <p class="lead">
+                <a href="{% url 'blog:update_post' post.id %}">Edit post</a>
+            </p>
+            <p class="lead">
+                <a href="{% url 'blog:post_delete' post.id %}">Delete</a>
+            </p>
+
+        {% endif %}
+    {% endif %}
+    <a class="btn btn-primary" href="{% url 'blog:post' post.id %}">Read More <span
+            class="glyphicon glyphicon-chevron-right"></span></a>
+
+    <hr>
+    {% endfor %}
+    <!-- Pager -->
+    <ul class="pager">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        {% if page_obj.has_next %}
+        <li class="next">
+            <a href="?page={{ page_obj.next_page_number }}">Newer &rarr;</a>
+        </li>
+        {% endif %}
+        {% if page_obj.has_previous %}
+        <li class="previous">
+            <a href="?page={{ page_obj.previous_page_number }}">&larr; Older</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+
+{% endblock %}

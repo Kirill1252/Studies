@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <title>Edit post</title>
+{% endblock %}
+{% block content %}
+<h1>{{ title}}</h1>
+{% if post.author.pk == request.user.pk %}
+   <form method="post" enctype="multipart/form-data">
+       {{ form|crispy }}
+       {% csrf_token %}
+       <input type="submit" class="btn btn-primary">
+   </form>
+{% else %}
+    <h1>You can't edit a post because you're not the author.</h1>
+{% endif %}
+{% endblock %}
